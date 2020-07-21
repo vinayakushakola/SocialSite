@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SocialSite</name>
+    </assembly>
+    <members>
+        <member name="M:SocialSite.Controllers.UserController.Registration(SocialSiteCommonLayer.RequestModels.RegistrationRequest)">
+            <summary>
+            It is used for User Registration
+            </summary>
+            <param name="userDetails">User Data</param>
+            <returns>If Data Found return Ok else Not Found or Bad Request</returns>
+        </member>
+        <member name="M:SocialSite.Controllers.UserController.Login(SocialSiteCommonLayer.RequestModels.LoginRequest)">
+            <summary>
+            It is used for User Login
+            </summary>
+            <param name="loginDetails">Login Data</param>
+            <returns>If Data Found return Ok else </returns>
+        </member>
+        <member name="M:SocialSite.Controllers.UserController.ValidateRegistrationRequest(SocialSiteCommonLayer.RequestModels.RegistrationRequest)">
+            <summary>
+            It Validate the Registration Request 
+            </summary>
+            <param name="userDetails">New User Data</param>
+            <returns>If validation successfull, return true else false</returns>
+        </member>
+        <member name="M:SocialSite.Controllers.UserController.ValidateLoginRequest(SocialSiteCommonLayer.RequestModels.LoginRequest)">
+            <summary>
+            It Validate The Login Request 
+            </summary>
+            <param name="loginRequest">Login Data</param>
+            <returns>If validation successfull, return true else false</returns>
+        </member>
+    </members>
+</doc>

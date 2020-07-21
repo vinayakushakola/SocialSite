@@ -4,4 +4,9 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SocialSiteCommonLayer\SocialSiteCommonLayer.csproj" />
+    <ProjectReference Include="..\SocialSiteRepositoryLayer\SocialSiteRepositoryLayer.csproj" />
+  </ItemGroup>
+
 </Project>

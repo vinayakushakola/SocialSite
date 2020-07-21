@@ -1,9 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿//
+// Author  : Vinayak Ushakola
+// Date    : 21/07/2020
+// Purpose : It Contain Users Model (Database Table)
+//
+
+using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace SocialSiteCommonLayer.DBModels
 {
