@@ -1,7 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using SocialSiteBusinessLayer.Interfaces;
 using SocialSiteCommonLayer.RequestModels;
+using SocialSiteCommonLayer.ResponseModels;
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace SocialSite.Controllers
 {
@@ -9,13 +15,18 @@ namespace SocialSite.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly IConfiguration _configuration;
         private readonly IUserBusiness _userBusiness;
         private static bool success = false;
         private static string message;
+        private static string token;
+        
+        private readonly string _login = "Login";
 
-        public UserController(IUserBusiness userBusiness)
+        public UserController(IUserBusiness userBusiness, IConfiguration configuration)
         {
             _userBusiness = userBusiness;
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -68,9 +79,10 @@ namespace SocialSite.Controllers
                     var data = _userBusiness.Login(loginDetails);
                     if (data != null)
                     {
+                        token = GenerateToken(data, _login);
                         success = true;
                         message = "User Successfully Logged In";
-                        return Ok(new { success, message, data });
+                        return Ok(new { success, message, data, token });
                     }
                     else
                     {
@@ -116,6 +128,38 @@ namespace SocialSite.Controllers
                 return false;
             else
                 return true;
+        }
+
+        /// <summary>
+        /// It Generates Token
+        /// </summary>
+        /// <param name="userDetails">User Details</param>
+        /// <param name="tokenType">Token Type</param>
+        /// <returns>It returns token</returns>
+        private string GenerateToken(UserResponse userDetails, string tokenType)
+        {
+            try
+            {
+                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+                var claims = new[]
+                {
+                    new Claim("UserID", userDetails.ID.ToString()),
+                    new Claim("Email", userDetails.Email.ToString()),
+                    new Claim("TokenType", tokenType),
+                    new Claim("UserRole", userDetails.UserRole.ToString())
+                };
+
+                var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Issuer"],
+                    claims, expires: DateTime.Now.AddDays(1), signingCredentials: credentials);
+
+                return new JwtSecurityTokenHandler().WriteToken(token);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

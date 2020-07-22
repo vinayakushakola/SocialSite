@@ -32,5 +32,13 @@
             <param name="loginDetails">Login Data</param>
             <returns>If validation successfull, return true else false</returns>
         </member>
+        <member name="M:SocialSite.Controllers.UserController.GenerateToken(SocialSiteCommonLayer.ResponseModels.UserResponse,System.String)">
+            <summary>
+            It Generates Token
+            </summary>
+            <param name="userDetails">User Details</param>
+            <param name="tokenType">Token Type</param>
+            <returns>It returns token</returns>
+        </member>
     </members>
 </doc>
