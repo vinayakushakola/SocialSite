@@ -1,8 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SocialSiteCommonLayer.DBModels;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SocialSiteRepositoryLayer.ApplicationContext
 {
@@ -14,6 +11,7 @@ namespace SocialSiteRepositoryLayer.ApplicationContext
         }
 
         public DbSet<Users> Users { set; get; }
+        public DbSet<Posts> Posts { set; get; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

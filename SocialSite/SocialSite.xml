@@ -4,6 +4,20 @@
         <name>SocialSite</name>
     </assembly>
     <members>
+        <member name="M:SocialSite.Controllers.PostController.UploadImage(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Upload
+            </summary>
+            <param name="formFile">Image Path</param>
+            <returns>If Data Found return Ok else Not Found or Bad Request</returns>
+        </member>
+        <member name="M:SocialSite.Controllers.PostController.UploadImageToCloudinary(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            It is used to Upload image into the Cloudinary
+            </summary>
+            <param name="formFile">Image Path</param>
+            <returns>If Image Uploaded Successfully return Image Link else Exception</returns>
+        </member>
         <member name="M:SocialSite.Controllers.UserController.Registration(SocialSiteCommonLayer.RequestModels.RegistrationRequest)">
             <summary>
             It is used for User Registration
