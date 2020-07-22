@@ -18,7 +18,7 @@ namespace SocialSiteRepositoryLayer.Services
     public class UserRepository : IUserRepository
     {
         private readonly AppDBContext _appDB;
-        private static string _user = "User";
+        private readonly string _user = "User";
         private static int count = 0;
 
         public UserRepository(AppDBContext appDB)
@@ -31,25 +31,29 @@ namespace SocialSiteRepositoryLayer.Services
             try
             {
                 UserResponse userResponse = null;
-                userDetails.Password = EncodeDecode.EncodePasswordToBase64(userDetails.Password);
-                var userData = new Users
+                var emailExists = _appDB.Users.Any(user => user.Email == userDetails.Email);
+                if (!emailExists)
                 {
-                    FirstName = userDetails.FirstName,
-                    LastName = userDetails.LastName,
-                    Email = userDetails.Email,
-                    Password = userDetails.Password,
-                    IsActive = true,
-                    UserRole = _user,
-                    CreatedDate = DateTime.Now,
-                    ModifiedDate = DateTime.Now
-                };
-                _appDB.Users.Add(userData);
-                count = _appDB.SaveChanges();
+                    userDetails.Password = EncodeDecode.EncodePasswordToBase64(userDetails.Password);
+                    var userData = new Users
+                    {
+                        FirstName = userDetails.FirstName,
+                        LastName = userDetails.LastName,
+                        Email = userDetails.Email,
+                        Password = userDetails.Password,
+                        IsActive = true,
+                        UserRole = _user,
+                        CreatedDate = DateTime.Now,
+                        ModifiedDate = DateTime.Now
+                    };
+                    _appDB.Users.Add(userData);
+                    count = _appDB.SaveChanges();
 
-                if (count > 0)
-                {
-                    userResponse = UserResponseMethod(userData);
-                    return userResponse;
+                    if (count > 0)
+                    {
+                        userResponse = UserResponseMethod(userData);
+                        return userResponse;
+                    }
                 }
                 return null;
             }

@@ -29,7 +29,7 @@
             <summary>
             It Validate The Login Request 
             </summary>
-            <param name="loginRequest">Login Data</param>
+            <param name="loginDetails">Login Data</param>
             <returns>If validation successfull, return true else false</returns>
         </member>
     </members>

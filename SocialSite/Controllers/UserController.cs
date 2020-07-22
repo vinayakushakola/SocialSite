@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SocialSiteBusinessLayer.Interfaces;
 using SocialSiteCommonLayer.RequestModels;
+using System;
 
 namespace SocialSite.Controllers
 {
@@ -33,23 +29,24 @@ namespace SocialSite.Controllers
         {
             try
             {
-                if (!ValidateRegistrationRequest(userDetails))
-                    return BadRequest(new { success, message = "Enter Proper Data" });
-
-                var data = _userBusiness.Registration(userDetails);
-                if (!data.Equals(null))
+                if (ValidateRegistrationRequest(userDetails))
                 {
-                    success = true;
-                    message = "User Account Created Successfully";
-                    return Ok(new { success, message, data });
+                    var data = _userBusiness.Registration(userDetails);
+                    if (data != null)
+                    {
+                        success = true;
+                        message = "User Account Created Successfully";
+                        return Ok(new { success, message, data });
+                    }
+                    else
+                    {
+                        message = "Email-ID Already Exists";
+                        return NotFound(new { success, message });
+                    }
                 }
-                else
-                {
-                    message = "Email-ID Already Exists";
-                    return NotFound(new { success, message });
-                }
+                return BadRequest(new { success, message = "Enter Proper Data" });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(new { ex.Message });
             }
@@ -66,21 +63,22 @@ namespace SocialSite.Controllers
         {
             try
             {
-                if (!ValidateLoginRequest(loginDetails))
-                    return BadRequest(new { success, message = "Enter Proper Data" });
-
-                var data = _userBusiness.Login(loginDetails);
-                if (!data.Equals(null))
+                if (ValidateLoginRequest(loginDetails))
                 {
-                    success = true;
-                    message = "User Successfully Logged In";
-                    return Ok(new { success, message, data });
+                    var data = _userBusiness.Login(loginDetails);
+                    if (data != null)
+                    {
+                        success = true;
+                        message = "User Successfully Logged In";
+                        return Ok(new { success, message, data });
+                    }
+                    else
+                    {
+                        message = "No Data Found";
+                        return NotFound(new { success, message });
+                    }
                 }
-                else
-                {
-                    message = "No Data Found";
-                    return NotFound(new { success, message });
-                }
+                return BadRequest(new { success, message = "Enter Proper Data" });
             }
             catch (Exception ex)
             {
@@ -108,7 +106,7 @@ namespace SocialSite.Controllers
         /// <summary>
         /// It Validate The Login Request 
         /// </summary>
-        /// <param name="loginRequest">Login Data</param>
+        /// <param name="loginDetails">Login Data</param>
         /// <returns>If validation successfull, return true else false</returns>
         private bool ValidateLoginRequest(LoginRequest loginDetails)
         {
