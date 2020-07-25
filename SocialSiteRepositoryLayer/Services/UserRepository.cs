@@ -114,6 +114,35 @@ namespace SocialSiteRepositoryLayer.Services
             }
         }
 
+        public bool SendFriendRequest(int userID, int friendID)
+        {
+            try
+            {
+                var userExists = CheckUserExists(userID);
+                var friendExists = CheckUserExists(friendID);
+                if(userExists && friendExists)
+                {
+                    var friendData = new Friends
+                    {
+                        UserID = userID,
+                        FriendID = friendID,
+                        IsAccepted = false,
+                        CreatedDate = DateTime.Now,
+                        ModifiedDate = DateTime.Now
+                    };
+                    _appDB.Friends.Add(friendData);
+                    count = _appDB.SaveChanges();
+                    if (count > 0)
+                        return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         private UserResponse UserResponseMethod(Users userData)
         {
             try
@@ -132,6 +161,22 @@ namespace SocialSiteRepositoryLayer.Services
                 return responseData;
             }
             catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private bool CheckUserExists(int userID)
+        {
+            try
+            {
+                var userExists = _appDB.Users.Any(user => user.ID == userID);
+                if (userExists)
+                    return true;
+                else
+                    return false;
+            }
+            catch(Exception ex)
             {
                 throw new Exception(ex.Message);
             }

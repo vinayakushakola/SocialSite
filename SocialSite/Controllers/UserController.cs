@@ -6,7 +6,7 @@ using SocialSiteCommonLayer.RequestModels;
 using SocialSiteCommonLayer.ResponseModels;
 using System;
 using System.IdentityModel.Tokens.Jwt;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
@@ -120,6 +120,47 @@ namespace SocialSite.Controllers
                     }
                 }
                 return BadRequest(new { success, message = "Enter Proper Data" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Send Friend Request 
+        /// </summary>
+        /// <param name="friendID">Friend-ID</param>
+        /// <returns>If Data Found return Ok else Not Found or Bad Request</returns>
+        [HttpPost]
+        [Route("{friendID}/SendRequest")]
+        public IActionResult SendFriendRequest(int friendID)
+        {
+            try
+            {
+                var user = HttpContext.User;
+                if ((user.HasClaim(u => u.Type == "TokenType")) && (user.HasClaim(u => u.Type == "UserRole")))
+                {
+                    if ((user.Claims.FirstOrDefault(u => u.Type == "TokenType").Value == "Login") &&
+                            (user.Claims.FirstOrDefault(u => u.Type == "UserRole").Value == "User"))
+                    {
+                        int userID = Convert.ToInt32(user.Claims.FirstOrDefault(u => u.Type == "UserID").Value);
+                        var data = _userBusiness.SendFriendRequest(userID, friendID);
+                        if (data)
+                        {
+                            success = true;
+                            message = "Friend Request Sent Successfully";
+                            return Ok(new { success, message, data });
+                        }
+                        else
+                        {
+                            message = "No User Present with this ID";
+                            return NotFound(new { success, message });
+                        }
+                    }
+                }
+                message = "Token Invalid!";
+                return BadRequest(new { success, message });
             }
             catch (Exception ex)
             {

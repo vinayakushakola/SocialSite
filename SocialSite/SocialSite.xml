@@ -58,6 +58,13 @@
             <param name="loginDetails">Login Data</param>
             <returns>If Data Found return Ok else </returns>
         </member>
+        <member name="M:SocialSite.Controllers.UserController.SendFriendRequest(System.Int32)">
+            <summary>
+            Send Friend Request 
+            </summary>
+            <param name="friendID">Friend-ID</param>
+            <returns>If Data Found return Ok else Not Found or Bad Request</returns>
+        </member>
         <member name="M:SocialSite.Controllers.UserController.ValidateRegistrationRequest(SocialSiteCommonLayer.RequestModels.RegistrationRequest)">
             <summary>
             It Validate the Registration Request 
