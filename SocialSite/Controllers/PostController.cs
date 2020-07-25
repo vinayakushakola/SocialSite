@@ -27,6 +27,85 @@ namespace SocialSite.Controllers
         }
 
         /// <summary>
+        /// Shows List of Images
+        /// </summary>
+        /// <returns>If Data Found return Ok else Not Found or Bad Request</returns>
+        [HttpGet]
+        public IActionResult ListOfPosts()
+        {
+            try
+            {
+                var user = HttpContext.User;
+                if ((user.HasClaim(u => u.Type == "TokenType")) && (user.HasClaim(u => u.Type == "UserRole")))
+                {
+                    if ((user.Claims.FirstOrDefault(u => u.Type == "TokenType").Value == "Login") &&
+                            (user.Claims.FirstOrDefault(u => u.Type == "UserRole").Value == "User"))
+                    {
+                        int userID = Convert.ToInt32(user.Claims.FirstOrDefault(u => u.Type == "UserID").Value);
+                        var data = _postBusiness.ListOfPosts(userID);
+                        if (data != null)
+                        {
+                            success = true;
+                            message = "List of Images Fetched Successfully";
+                            return Ok(new { success, message, data });
+                        }
+                        else
+                        {
+                            message = "No Data Found";
+                            return NotFound(new { success, message });
+                        }
+                    }
+                }
+                message = "Token Invalid!";
+                return BadRequest(new { success, message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Show Image by ID
+        /// </summary>
+        /// <param name="postID">Post-ID</param>
+        /// <returns>If Data Found return Ok else Not Found or Bad Request</returns>
+        [HttpGet]
+        [Route("{postID}")]
+        public IActionResult GetPostByPostID(int postID)
+        {
+            try
+            {
+                var user = HttpContext.User;
+                if ((user.HasClaim(u => u.Type == "TokenType")) && (user.HasClaim(u => u.Type == "UserRole")))
+                {
+                    if ((user.Claims.FirstOrDefault(u => u.Type == "TokenType").Value == "Login") &&
+                            (user.Claims.FirstOrDefault(u => u.Type == "UserRole").Value == "User"))
+                    {
+                        int userID = Convert.ToInt32(user.Claims.FirstOrDefault(u => u.Type == "UserID").Value);
+                        var data = _postBusiness.GetPostByID(userID, postID);
+                        if (data != null)
+                        {
+                            success = true;
+                            message = "Image Fetched Successfully";
+                            return Ok(new { success, message, data });
+                        }
+                        else
+                        {
+                            message = "No Data Found";
+                            return NotFound(new { success, message });
+                        }
+                    }
+                }
+                message = "Token Invalid!";
+                return BadRequest(new { success, message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { ex.Message });
+            }
+        }
+        /// <summary>
         /// Upload
         /// </summary>
         /// <param name="formFile">Image Path</param>
@@ -62,6 +141,47 @@ namespace SocialSite.Controllers
                 return BadRequest(new { success, message });
             }
             catch(Exception ex)
+            {
+                return BadRequest(new { ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Like Post
+        /// </summary>
+        /// <param name="postID">Post-ID</param>
+        /// <returns>If Data Liked return Ok else Not Found or Bad Request</returns>
+        [HttpPost]
+        [Route("{postID}/Like")]
+        public IActionResult LikeImage(int postID)
+        {
+            try
+            {
+                var user = HttpContext.User;
+                if ((user.HasClaim(u => u.Type == "TokenType")) && (user.HasClaim(u => u.Type == "UserRole")))
+                {
+                    if ((user.Claims.FirstOrDefault(u => u.Type == "TokenType").Value == "Login") &&
+                            (user.Claims.FirstOrDefault(u => u.Type == "UserRole").Value == "User"))
+                    {
+                        int userID = Convert.ToInt32(user.Claims.FirstOrDefault(u => u.Type == "UserID").Value);
+                        var data = _postBusiness.LikePost(userID, postID);
+                        if (data)
+                        {
+                            success = true;
+                            message = "Post Liked Successfully";
+                            return Ok(new { success, message });
+                        }
+                        else
+                        {
+                            message = "Post Not Found";
+                            return NotFound(new { success, message });
+                        }
+                    }
+                }
+                message = "Token Invalid!";
+                return BadRequest(new { success, message });
+            }
+            catch (Exception ex)
             {
                 return BadRequest(new { ex.Message });
             }

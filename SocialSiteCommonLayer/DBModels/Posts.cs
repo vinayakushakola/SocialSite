@@ -24,6 +24,9 @@ namespace SocialSiteCommonLayer.DBModels
         public string PostPath { get; set; }
 
         [Required]
+        public int PostLikes { get; set; }
+
+        [Required]
         [DefaultValue("false")]
         public bool IsRemoved { get; set; }
 

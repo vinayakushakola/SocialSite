@@ -20,9 +20,6 @@ namespace SocialSiteCommonLayer.DBModels
         [ForeignKey("Posts")]
         public int PostID { get; set; }
 
-        [ForeignKey("Users")]
-        public int UserID { get; set; }
-
         [Required]
         public int LikeByUserID { get; set; }
 
@@ -33,5 +30,9 @@ namespace SocialSiteCommonLayer.DBModels
         [Required]
         [Column(TypeName = "DateTime2")]
         public DateTime CreatedDate { get; set; }
+
+        [Required]
+        [Column(TypeName = "DateTime2")]
+        public DateTime ModifiedDate { get; set; }
     }
 }

@@ -16,6 +16,8 @@ namespace SocialSiteCommonLayer.ResponseModels
 
         public string PostPath { get; set; }
 
+        public int PostLikes { get; set; }
+
         public bool IsRemoved { get; set; }
 
         public DateTime CreatedDate { get; set; }

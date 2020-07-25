@@ -72,7 +72,7 @@ namespace SocialSiteRepositoryLayer.Services
                 var userData = _appDB.Users.
                     Where(user => user.Email == loginDetails.Email && user.Password == loginDetails.Password).
                     FirstOrDefault();
-                if (!userData.Equals(null))
+                if (userData != null)
                 {
                     userResponse = UserResponseMethod(userData);
                     return userResponse;

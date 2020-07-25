@@ -12,6 +12,7 @@ namespace SocialSiteRepositoryLayer.ApplicationContext
 
         public DbSet<Users> Users { set; get; }
         public DbSet<Posts> Posts { set; get; }
+        public DbSet<Likes> Likes { set; get; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -86,7 +86,7 @@ namespace SocialSite.Controllers
                     }
                     else
                     {
-                        message = "No Data Found";
+                        message = "No Account Present with this Email-ID & Password";
                         return NotFound(new { success, message });
                     }
                 }
