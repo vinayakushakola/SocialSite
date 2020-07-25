@@ -169,6 +169,87 @@ namespace SocialSite.Controllers
         }
 
         /// <summary>
+        /// Shows Friend Requests
+        /// </summary>
+        /// <returns>If Data Found return Ok else Bad Request</returns>
+        [HttpGet]
+        [Route("FriendRequests")]
+        public IActionResult FriendRequests()
+        {
+            try
+            {
+                var user = HttpContext.User;
+                if ((user.HasClaim(u => u.Type == "TokenType")) && (user.HasClaim(u => u.Type == "UserRole")))
+                {
+                    if ((user.Claims.FirstOrDefault(u => u.Type == "TokenType").Value == "Login") &&
+                            (user.Claims.FirstOrDefault(u => u.Type == "UserRole").Value == "User"))
+                    {
+                        int userID = Convert.ToInt32(user.Claims.FirstOrDefault(u => u.Type == "UserID").Value);
+                        var data = _userBusiness.FriendRequests(userID);
+                        if (data != null)
+                        {
+                            success = true;
+                            message = "Friend Request Received Successfully";
+                            return Ok(new { success, message, data });
+                        }
+                        else
+                        {
+                            message = "No Friend Requests";
+                            return Ok(new { success, message });
+                        }
+                    }
+                }
+                message = "Token Invalid!";
+                return BadRequest(new { success, message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Accept Friend Request
+        /// </summary>
+        /// <param name="friendID">Friend-ID</param>
+        /// <returns>If Request Accepted return Ok else Not Found or Bad Request</returns>
+        [HttpPost]
+        [Route("friendID/AcceptRequest")]
+        public IActionResult AcceptFriendRequest(int friendID)
+        {
+            try
+            {
+                var user = HttpContext.User;
+                if ((user.HasClaim(u => u.Type == "TokenType")) && (user.HasClaim(u => u.Type == "UserRole")))
+                {
+                    if ((user.Claims.FirstOrDefault(u => u.Type == "TokenType").Value == "Login") &&
+                            (user.Claims.FirstOrDefault(u => u.Type == "UserRole").Value == "User"))
+                    {
+                        int userID = Convert.ToInt32(user.Claims.FirstOrDefault(u => u.Type == "UserID").Value);
+                        var data = _userBusiness.AcceptFriendRequest(userID, friendID);
+                        if (data)
+                        {
+                            success = true;
+                            message = "Friend Request Accepted Successfully";
+                            return Ok(new { success, message });
+                        }
+                        else
+                        {
+                            message = "No Data Found";
+                            return NotFound(new { success, message });
+                        }
+                    }
+                }
+                message = "Token Invalid!";
+                return BadRequest(new { success, message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { ex.Message });
+            }
+        }
+
+        /// <summary>
         /// It Validate the Registration Request 
         /// </summary>
         /// <param name="userDetails">New User Data</param>

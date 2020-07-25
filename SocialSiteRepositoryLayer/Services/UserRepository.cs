@@ -143,6 +143,56 @@ namespace SocialSiteRepositoryLayer.Services
             }
         }
 
+        public List<UserResponse> FriendRequests(int userID)
+        {
+            try
+            {
+                List<UserResponse> userResponses = null;
+                var userExists = CheckUserExists(userID);
+                if (userExists)
+                {
+                    userResponses = _appDB.Friends.
+                        Where(user => user.FriendID == userID && user.IsAccepted == false).
+                        Join(_appDB.Users,
+                        f => f.UserID,
+                        u => u.ID,
+                        (f, u) => UserResponseMethod(u)).ToList();
+                    if (userResponses != null) 
+                        return userResponses;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public bool AcceptFriendRequest(int userID, int friendID)
+        {
+            try
+            {
+                var userExists = CheckUserExists(userID);
+                if (userExists)
+                {
+                    var friendData = _appDB.Friends.
+                        Where(friend => friend.FriendID == userID && friend.UserID == friendID).FirstOrDefault();
+                    if (friendData != null)
+                    {
+                        friendData.IsAccepted = true;
+                        count = _appDB.SaveChanges();
+                        if (count > 0)
+                            return true;
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         private UserResponse UserResponseMethod(Users userData)
         {
             try

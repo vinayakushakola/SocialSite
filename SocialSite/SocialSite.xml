@@ -65,6 +65,19 @@
             <param name="friendID">Friend-ID</param>
             <returns>If Data Found return Ok else Not Found or Bad Request</returns>
         </member>
+        <member name="M:SocialSite.Controllers.UserController.FriendRequests">
+            <summary>
+            Shows Friend Requests
+            </summary>
+            <returns>If Data Found return Ok else Bad Request</returns>
+        </member>
+        <member name="M:SocialSite.Controllers.UserController.AcceptFriendRequest(System.Int32)">
+            <summary>
+            Accept Friend Request
+            </summary>
+            <param name="friendID">Friend-ID</param>
+            <returns>If Request Accepted return Ok else Not Found or Bad Request</returns>
+        </member>
         <member name="M:SocialSite.Controllers.UserController.ValidateRegistrationRequest(SocialSiteCommonLayer.RequestModels.RegistrationRequest)">
             <summary>
             It Validate the Registration Request 

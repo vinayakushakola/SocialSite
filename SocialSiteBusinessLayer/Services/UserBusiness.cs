@@ -49,5 +49,21 @@ namespace SocialSiteBusinessLayer.Services
             else
                 return false;
         }
+
+        public List<UserResponse> FriendRequests(int userID)
+        {
+            if (userID > 0)
+                return _userRepository.FriendRequests(userID);
+            else
+                return null;
+        }
+
+        public bool AcceptFriendRequest(int userID, int friendID)
+        {
+            if (userID > 0 && friendID > 0)
+                return _userRepository.AcceptFriendRequest(userID, friendID);
+            else
+                return false;
+        }
     }
 }

@@ -19,5 +19,9 @@ namespace SocialSiteRepositoryLayer.Interfaces
         UserResponse Login(LoginRequest loginDetails);
 
         bool SendFriendRequest(int userID, int friendID);
+
+        List<UserResponse> FriendRequests(int userID);
+
+        bool AcceptFriendRequest(int userID, int friendID);
     }
 }
