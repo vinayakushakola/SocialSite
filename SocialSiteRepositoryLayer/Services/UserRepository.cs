@@ -11,6 +11,7 @@ using SocialSiteCommonLayer.ResponseModels;
 using SocialSiteRepositoryLayer.ApplicationContext;
 using SocialSiteRepositoryLayer.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SocialSiteRepositoryLayer.Services
@@ -24,6 +25,34 @@ namespace SocialSiteRepositoryLayer.Services
         public UserRepository(AppDBContext appDB)
         {
             _appDB = appDB;
+        }
+
+        public List<UserResponse> ListOfUsers()
+        {
+            try
+            {
+                List<UserResponse> userResponses = null;
+                userResponses = _appDB.Users.
+                    Where(user => user.IsActive == true && user.UserRole == _user).
+                    Select(user => new UserResponse
+                    {
+                        ID = user.ID,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Email = user.Email,
+                        IsActive = user.IsActive,
+                        UserRole = user.UserRole,
+                        CreatedDate = user.CreatedDate,
+                        ModifiedDate = user.ModifiedDate
+                    }).ToList();
+                if (userResponses != null)
+                    return userResponses;
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public UserResponse Registration(RegistrationRequest userDetails)

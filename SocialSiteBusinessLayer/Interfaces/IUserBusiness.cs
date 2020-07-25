@@ -6,11 +6,14 @@
 
 using SocialSiteCommonLayer.RequestModels;
 using SocialSiteCommonLayer.ResponseModels;
+using System.Collections.Generic;
 
 namespace SocialSiteBusinessLayer.Interfaces
 {
     public interface IUserBusiness
     {
+        List<UserResponse> ListOfUsers();
+        
         UserResponse Registration(RegistrationRequest userDetails);
 
         UserResponse Login(LoginRequest loginDetails);

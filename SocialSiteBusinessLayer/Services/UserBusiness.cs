@@ -8,6 +8,7 @@ using SocialSiteBusinessLayer.Interfaces;
 using SocialSiteCommonLayer.RequestModels;
 using SocialSiteCommonLayer.ResponseModels;
 using SocialSiteRepositoryLayer.Interfaces;
+using System.Collections.Generic;
 
 namespace SocialSiteBusinessLayer.Services
 {
@@ -18,6 +19,11 @@ namespace SocialSiteBusinessLayer.Services
         public UserBusiness(IUserRepository userRepository)
         {
             _userRepository = userRepository;
+        }
+
+        public List<UserResponse> ListOfUsers()
+        {
+            return _userRepository.ListOfUsers();
         }
 
         public UserResponse Registration(RegistrationRequest userDetails)

@@ -6,11 +6,14 @@
 
 using SocialSiteCommonLayer.RequestModels;
 using SocialSiteCommonLayer.ResponseModels;
+using System.Collections.Generic;
 
 namespace SocialSiteRepositoryLayer.Interfaces
 {
     public interface IUserRepository
     {
+        List<UserResponse> ListOfUsers();
+
         UserResponse Registration(RegistrationRequest userDetails);
         
         UserResponse Login(LoginRequest loginDetails);

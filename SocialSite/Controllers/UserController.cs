@@ -6,6 +6,7 @@ using SocialSiteCommonLayer.RequestModels;
 using SocialSiteCommonLayer.ResponseModels;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Claims;
 using System.Text;
 
@@ -27,6 +28,34 @@ namespace SocialSite.Controllers
         {
             _userBusiness = userBusiness;
             _configuration = configuration;
+        }
+
+        /// <summary>
+        /// Shows All the Users
+        /// </summary>
+        /// <returns>If Data Found return Ok else Not Found or Bad Request</returns>
+        [HttpGet]
+        public IActionResult ListOfUsers()
+        {
+            try
+            {
+                var data = _userBusiness.ListOfUsers();
+                if (data != null)
+                {
+                    success = true;
+                    message = "Users Data Fetched Successfully";
+                    return Ok(new { success, message, data });
+                }
+                else
+                {
+                    message = "No Users Found";
+                    return NotFound(new { success, message });
+                }
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(new { ex.Message });
+            }
         }
 
         /// <summary>

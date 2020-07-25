@@ -38,6 +38,12 @@
             <param name="formFile">Image Path</param>
             <returns>If Image Uploaded Successfully return Image Link else Exception</returns>
         </member>
+        <member name="M:SocialSite.Controllers.UserController.ListOfUsers">
+            <summary>
+            Shows All the Users
+            </summary>
+            <returns>If Data Found return Ok else Not Found or Bad Request</returns>
+        </member>
         <member name="M:SocialSite.Controllers.UserController.Registration(SocialSiteCommonLayer.RequestModels.RegistrationRequest)">
             <summary>
             It is used for User Registration
