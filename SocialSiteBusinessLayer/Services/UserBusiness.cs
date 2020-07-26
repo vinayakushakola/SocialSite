@@ -65,5 +65,13 @@ namespace SocialSiteBusinessLayer.Services
             else
                 return false;
         }
+
+        public bool RejectFriendRequest(int userID, int friendID)
+        {
+            if (userID > 0 && friendID > 0)
+                return _userRepository.RejectFriendRequest(userID, friendID);
+            else
+                return false;
+        }
     }
 }

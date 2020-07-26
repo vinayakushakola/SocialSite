@@ -30,6 +30,10 @@ namespace SocialSiteCommonLayer.DBModels
         public bool IsAccepted { get; set; }
 
         [Required]
+        [DefaultValue("false")]
+        public bool IsRejected { get; set; }
+
+        [Required]
         [Column(TypeName = "DateTime2")]
         public DateTime CreatedDate { get; set; }
 

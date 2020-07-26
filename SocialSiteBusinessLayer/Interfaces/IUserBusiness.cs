@@ -23,5 +23,7 @@ namespace SocialSiteBusinessLayer.Interfaces
         List<UserResponse> FriendRequests(int userID);
 
         bool AcceptFriendRequest(int userID, int friendID);
+        
+        bool RejectFriendRequest(int userID, int friendID);
     }
 }

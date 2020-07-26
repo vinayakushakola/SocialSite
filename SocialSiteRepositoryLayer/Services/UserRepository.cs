@@ -127,6 +127,7 @@ namespace SocialSiteRepositoryLayer.Services
                         UserID = userID,
                         FriendID = friendID,
                         IsAccepted = false,
+                        IsRejected = false,
                         CreatedDate = DateTime.Now,
                         ModifiedDate = DateTime.Now
                     };
@@ -152,7 +153,7 @@ namespace SocialSiteRepositoryLayer.Services
                 if (userExists)
                 {
                     userResponses = _appDB.Friends.
-                        Where(user => user.FriendID == userID && user.IsAccepted == false).
+                        Where(user => user.FriendID == userID && user.IsAccepted == false && user.IsRejected == false).
                         Join(_appDB.Users,
                         f => f.UserID,
                         u => u.ID,
@@ -180,6 +181,31 @@ namespace SocialSiteRepositoryLayer.Services
                     if (friendData != null)
                     {
                         friendData.IsAccepted = true;
+                        count = _appDB.SaveChanges();
+                        if (count > 0)
+                            return true;
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public bool RejectFriendRequest(int userID, int friendID)
+        {
+            try
+            {
+                var userExists = CheckUserExists(userID);
+                if (userExists)
+                {
+                    var friendData = _appDB.Friends.
+                        Where(friend => friend.FriendID == userID && friend.UserID == friendID).FirstOrDefault();
+                    if (friendData != null)
+                    {
+                        friendData.IsRejected = true;
                         count = _appDB.SaveChanges();
                         if (count > 0)
                             return true;
