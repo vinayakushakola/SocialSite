@@ -5,6 +5,7 @@
 //
 
 using SocialSiteCommonLayer.DBModels;
+using SocialSiteCommonLayer.RequestModels;
 using SocialSiteCommonLayer.ResponseModels;
 using SocialSiteRepositoryLayer.ApplicationContext;
 using SocialSiteRepositoryLayer.Interfaces;
@@ -37,16 +38,7 @@ namespace SocialSiteRepositoryLayer.Services
                         Join(_appDB.Users,
                         p => p.UserID,
                         u => u.ID,
-                        (p, v) => new PostResponse
-                        {
-                            PostID = p.PostID,
-                            UserID = p.UserID,
-                            PostPath = p.PostPath,
-                            IsRemoved = p.IsRemoved,
-                            PostLikes = p.PostLikes,
-                            CreatedDate = p.CreatedDate,
-                            ModifiedDate = p.ModifiedDate
-                        }).ToList();
+                        (p, v) => PostResponseMethod(p)).ToList();
                     if (responseData != null)
                         return responseData;
                 }
@@ -110,17 +102,19 @@ namespace SocialSiteRepositoryLayer.Services
         {
             try
             {
-                var likeData = new Likes
+                var userExists = CheckUserExists(userID);
+                var postExists = _appDB.Posts.Any(post => post.PostID == postID && post.IsRemoved == false);
+
+                if (userExists && postExists)
                 {
-                    PostID = postID,
-                    LikeByUserID = userID,
-                    IsLiked = true,
-                    CreatedDate = DateTime.Now,
-                    ModifiedDate = DateTime.Now
-                };
-                var postExists = _appDB.Posts.Any(post => post.PostID == postID);
-                if (postExists)
-                {
+                    var likeData = new Likes
+                    {
+                        PostID = postID,
+                        LikeByUserID = userID,
+                        IsLiked = true,
+                        CreatedDate = DateTime.Now,
+                        ModifiedDate = DateTime.Now
+                    };
                     var postData = _appDB.Posts.Find(postID);
                     postData.PostLikes += 1;
                     _appDB.SaveChanges();
@@ -137,6 +131,36 @@ namespace SocialSiteRepositoryLayer.Services
             }
         }
 
+        public bool CommentOnPost(int userID, int postID, CommentRequest commentDetails)
+        {
+            try
+            {
+                var userExists = CheckUserExists(userID);
+                var postExists = _appDB.Posts.Any(post => post.PostID == postID && post.IsRemoved == false);
+
+                if (userExists && postExists)
+                {
+                    var commentData = new Comments
+                    {
+                        PostID = postID,
+                        CommentByUserID = userID,
+                        Comment = commentDetails.Comment,
+                        CreatedDate = DateTime.Now,
+                        ModifiedDate = DateTime.Now
+                    };
+                    _appDB.Comments.Add(commentData);
+                    count = _appDB.SaveChanges();
+                    if (count > 0)
+                        return true;
+                }
+                return false;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+ 
         private PostResponse PostResponseMethod(Posts postData)
         {
             try

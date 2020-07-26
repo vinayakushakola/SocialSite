@@ -4,6 +4,7 @@
 // Purpose : It Contain Definition of PostBusiness Methods
 //
 
+using SocialSiteCommonLayer.RequestModels;
 using SocialSiteCommonLayer.ResponseModels;
 using System.Collections.Generic;
 namespace SocialSiteBusinessLayer.Interfaces
@@ -17,5 +18,7 @@ namespace SocialSiteBusinessLayer.Interfaces
         PostResponse UploadImage(int userID, string postPath);
 
         bool LikePost(int userID, int postID);
+
+        bool CommentOnPost(int userID, int postID, CommentRequest commentDetails);
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using SocialSiteBusinessLayer.Interfaces;
+using SocialSiteCommonLayer.RequestModels;
 
 namespace SocialSite.Controllers
 {
@@ -169,6 +170,48 @@ namespace SocialSite.Controllers
                         {
                             success = true;
                             message = "Post Liked Successfully";
+                            return Ok(new { success, message, data });
+                        }
+                        else
+                        {
+                            message = "Post Not Found";
+                            return NotFound(new { success, message });
+                        }
+                    }
+                }
+                message = "Token Invalid!";
+                return BadRequest(new { success, message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Comment on Post
+        /// </summary>
+        /// <param name="postID">Post-ID</param>
+        /// <param name="commentDetails">Comment Data</param>
+        /// <returns>If Data Found return Ok else Not Found or Bad Request</returns>
+        [HttpPost]
+        [Route("{postID}/Comment")]
+        public IActionResult CommentOnImage(int postID, CommentRequest commentDetails)
+        {
+            try
+            {
+                var user = HttpContext.User;
+                if ((user.HasClaim(u => u.Type == "TokenType")) && (user.HasClaim(u => u.Type == "UserRole")))
+                {
+                    if ((user.Claims.FirstOrDefault(u => u.Type == "TokenType").Value == "Login") &&
+                            (user.Claims.FirstOrDefault(u => u.Type == "UserRole").Value == "User"))
+                    {
+                        int userID = Convert.ToInt32(user.Claims.FirstOrDefault(u => u.Type == "UserID").Value);
+                        var data = _postBusiness.CommentOnPost(userID, postID, commentDetails);
+                        if (data)
+                        {
+                            success = true;
+                            message = "Comment on Post is Successfull";
                             return Ok(new { success, message });
                         }
                         else

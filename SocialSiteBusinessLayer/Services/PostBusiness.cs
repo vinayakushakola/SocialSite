@@ -5,6 +5,7 @@
 //
 
 using SocialSiteBusinessLayer.Interfaces;
+using SocialSiteCommonLayer.RequestModels;
 using SocialSiteCommonLayer.ResponseModels;
 using SocialSiteRepositoryLayer.Interfaces;
 using System;
@@ -51,6 +52,14 @@ namespace SocialSiteBusinessLayer.Services
         {
             if (userID > 0 && postID > 0)
                 return _postRepository.LikePost(userID, postID);
+            else
+                return false;
+        }
+
+        public bool CommentOnPost(int userID, int postID, CommentRequest commentDetails)
+        {
+            if (userID > 0 && postID > 0)
+                return _postRepository.CommentOnPost(userID, postID, commentDetails);
             else
                 return false;
         }

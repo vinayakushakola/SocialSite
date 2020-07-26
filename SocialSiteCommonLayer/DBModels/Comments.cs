@@ -1,37 +1,29 @@
 ﻿//
 // Author  : Vinayak Ushakola
-// Date    : 25/07/2020
-// Purpose : It Contain Friends Model (Database Table)
+// Date    : 26/07/2020
+// Purpose : It Contain Comments Model (Database Table)
 //
 
 using System;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SocialSiteCommonLayer.DBModels
 {
-    public class Friends
+    public class Comments
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
-        [Required]
-        [ForeignKey("Users")]
-        public int UserID { get; set; }
+        [ForeignKey("Posts")]
+        public int PostID { get; set; }
 
         [Required]
-        [ForeignKey("Users")]
-        public int FriendID { get; set; }
+        public int CommentByUserID { get; set; }
 
         [Required]
-        [DefaultValue("false")]
-        public bool IsAccepted { get; set; }
-
-        [Required]
-        [DefaultValue("false")]
-        public bool IsRejected { get; set; }
+        public string Comment { get; set; }
 
         [Required]
         [Column(TypeName = "DateTime2")]

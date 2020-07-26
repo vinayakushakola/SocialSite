@@ -4,6 +4,7 @@
 // Purpose : It Contain Definition of PostRepository Methods
 //
 
+using SocialSiteCommonLayer.RequestModels;
 using SocialSiteCommonLayer.ResponseModels;
 using System.Collections.Generic;
 
@@ -18,5 +19,7 @@ namespace SocialSiteRepositoryLayer.Interfaces
         PostResponse UploadImage(int userID, string postPath);
 
         bool LikePost(int userID, int postID);
+
+        bool CommentOnPost(int userID, int postID, CommentRequest commentDetails);
     }
 }
