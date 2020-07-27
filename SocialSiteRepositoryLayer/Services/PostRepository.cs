@@ -131,7 +131,7 @@ namespace SocialSiteRepositoryLayer.Services
             }
         }
 
-        public List<UserPostResponse> ListOfLikesOnPost(int userID, int postID)
+        public List<UserLikeResponse> ListOfLikesOnPost(int userID, int postID)
         {
             try
             {
@@ -145,7 +145,7 @@ namespace SocialSiteRepositoryLayer.Services
                         Join(_appDB.Users,
                         l => l.LikeByUserID,
                         u => u.ID,
-                        (l, u) => new UserPostResponse
+                        (l, u) => new UserLikeResponse
                         {
                             UserID = u.ID,
                             Name = u.FirstName + " " + u.LastName
@@ -191,7 +191,38 @@ namespace SocialSiteRepositoryLayer.Services
                 throw new Exception(ex.Message);
             }
         }
- 
+
+        public List<UserCommentResponse> ListOfCommentsOnPost(int userID, int postID)
+        {
+            try
+            {
+                var userExists = CheckUserExists(userID);
+                var postExists = _appDB.Posts.Any(post => post.PostID == postID && post.IsRemoved == false);
+
+                if (userExists && postExists)
+                {
+                    var userData = _appDB.Comments.
+                        Where(like => like.PostID == postID).
+                        Join(_appDB.Users,
+                        c => c.CommentByUserID,
+                        u => u.ID,
+                        (c, u) => new UserCommentResponse
+                        {
+                            UserID = u.ID,
+                            Name = u.FirstName + " " + u.LastName,
+                            Comment = c.Comment
+                        }).ToList();
+                    if (userData != null)
+                        return userData;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         private PostResponse PostResponseMethod(Posts postData)
         {
             try

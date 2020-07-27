@@ -25,9 +25,16 @@ namespace SocialSiteCommonLayer.ResponseModels
         public DateTime ModifiedDate { get; set; }
     }
 
-    public class UserPostResponse
+    public class UserLikeResponse
     {
         public int UserID { get; set; }
         public string Name { get; set; }
+    }
+
+    public class UserCommentResponse
+    {
+        public int UserID { get; set; }
+        public string Name { get; set; }
+        public string Comment { get; set; }
     }
 }

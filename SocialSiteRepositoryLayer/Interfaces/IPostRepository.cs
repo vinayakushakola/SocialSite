@@ -20,8 +20,10 @@ namespace SocialSiteRepositoryLayer.Interfaces
 
         bool LikePost(int userID, int postID);
 
-        List<UserPostResponse> ListOfLikesOnPost(int userID, int postID);
+        List<UserLikeResponse> ListOfLikesOnPost(int userID, int postID);
 
         bool CommentOnPost(int userID, int postID, CommentRequest commentDetails);
+
+        List<UserCommentResponse> ListOfCommentsOnPost(int userID, int postID);
     }
 }

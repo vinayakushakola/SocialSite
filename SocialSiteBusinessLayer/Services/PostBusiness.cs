@@ -56,7 +56,7 @@ namespace SocialSiteBusinessLayer.Services
                 return false;
         }
 
-        public List<UserPostResponse> ListOfLikesOnPost(int userID, int postID)
+        public List<UserLikeResponse> ListOfLikesOnPost(int userID, int postID)
         {
             if (userID > 0 && postID > 0)
                 return _postRepository.ListOfLikesOnPost(userID, postID);
@@ -70,6 +70,14 @@ namespace SocialSiteBusinessLayer.Services
                 return _postRepository.CommentOnPost(userID, postID, commentDetails);
             else
                 return false;
+        }
+
+        public List<UserCommentResponse> ListOfCommentsOnPost(int userID, int postID)
+        {
+            if (userID > 0 && postID > 0)
+                return _postRepository.ListOfCommentsOnPost(userID, postID);
+            else
+                return null;
         }
     }
 }
