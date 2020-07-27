@@ -131,6 +131,37 @@ namespace SocialSiteRepositoryLayer.Services
             }
         }
 
+        public List<UserPostResponse> ListOfLikesOnPost(int userID, int postID)
+        {
+            try
+            {
+                var userExists = CheckUserExists(userID);
+                var postExists = _appDB.Posts.Any(post => post.PostID == postID && post.IsRemoved == false);
+
+                if (userExists && postExists)
+                {
+                    var userData = _appDB.Likes.
+                        Where(like => like.PostID == postID && like.IsLiked == true).
+                        Join(_appDB.Users,
+                        l => l.LikeByUserID,
+                        u => u.ID,
+                        (l, u) => new UserPostResponse
+                        {
+                            UserID = u.ID,
+                            Name = u.FirstName + " " + u.LastName
+                        }).ToList();
+                    if (userData != null)
+                        return userData;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+
         public bool CommentOnPost(int userID, int postID, CommentRequest commentDetails)
         {
             try

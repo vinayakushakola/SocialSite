@@ -56,6 +56,14 @@ namespace SocialSiteBusinessLayer.Services
                 return false;
         }
 
+        public List<UserPostResponse> ListOfLikesOnPost(int userID, int postID)
+        {
+            if (userID > 0 && postID > 0)
+                return _postRepository.ListOfLikesOnPost(userID, postID);
+            else
+                return null;
+        }
+
         public bool CommentOnPost(int userID, int postID, CommentRequest commentDetails)
         {
             if (userID > 0 && postID > 0)

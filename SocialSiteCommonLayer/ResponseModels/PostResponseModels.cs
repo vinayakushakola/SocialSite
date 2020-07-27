@@ -5,7 +5,6 @@
 //
 
 using System;
-using System.Collections.Generic;
 
 namespace SocialSiteCommonLayer.ResponseModels
 {
@@ -24,5 +23,11 @@ namespace SocialSiteCommonLayer.ResponseModels
         public DateTime CreatedDate { get; set; }
 
         public DateTime ModifiedDate { get; set; }
+    }
+
+    public class UserPostResponse
+    {
+        public int UserID { get; set; }
+        public string Name { get; set; }
     }
 }

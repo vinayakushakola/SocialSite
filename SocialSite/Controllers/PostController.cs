@@ -170,6 +170,47 @@ namespace SocialSite.Controllers
                         {
                             success = true;
                             message = "Post Liked Successfully";
+                            return Ok(new { success, message });
+                        }
+                        else
+                        {
+                            message = "Post Not Found";
+                            return NotFound(new { success, message });
+                        }
+                    }
+                }
+                message = "Token Invalid!";
+                return BadRequest(new { success, message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Shows Number of Likes on a Post
+        /// </summary>
+        /// <param name="postID">Post-ID</param>
+        /// <returns>If Data Found return ok else Not Found or Bad Request</returns>
+        [HttpPost]
+        [Route("{postID}/Likes")]
+        public IActionResult LikesOnImage(int postID)
+        {
+            try
+            {
+                var user = HttpContext.User;
+                if ((user.HasClaim(u => u.Type == "TokenType")) && (user.HasClaim(u => u.Type == "UserRole")))
+                {
+                    if ((user.Claims.FirstOrDefault(u => u.Type == "TokenType").Value == "Login") &&
+                            (user.Claims.FirstOrDefault(u => u.Type == "UserRole").Value == "User"))
+                    {
+                        int userID = Convert.ToInt32(user.Claims.FirstOrDefault(u => u.Type == "UserID").Value);
+                        var data = _postBusiness.ListOfLikesOnPost(userID, postID);
+                        if (data != null)
+                        {
+                            success = true;
+                            message = "Number of Likes on a Post Fetched Successfully";
                             return Ok(new { success, message, data });
                         }
                         else
