@@ -42,6 +42,14 @@ namespace SocialSiteBusinessLayer.Services
                 return null;
         }
 
+        public UserResponse UploadProfileImage(int userID, string profilePath)
+        {
+            if (userID > 0 && profilePath != null)
+                return _userRepository.UploadProfileImage(userID, profilePath);
+            else
+                return null;
+        }
+
         public bool SendFriendRequest(int userID, int friendID)
         {
             if (userID > 0 && friendID > 0)

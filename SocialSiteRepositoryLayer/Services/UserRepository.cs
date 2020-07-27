@@ -114,6 +114,33 @@ namespace SocialSiteRepositoryLayer.Services
             }
         }
 
+        public UserResponse UploadProfileImage(int userID, string profilePath)
+        {
+            try
+            {
+                UserResponse userResponse = null;
+                var userExists = CheckUserExists(userID);
+                if (userExists)
+                {
+                    var userData = _appDB.Users.
+                        Where(user => user.ID == userID && user.IsActive == true).
+                        FirstOrDefault();
+                    userData.ProfilePath = profilePath;
+                    _appDB.SaveChanges();
+                    if (userData != null)
+                    {
+                        userResponse = UserResponseMethod(userData);
+                        return userResponse;
+                    }
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public bool SendFriendRequest(int userID, int friendID)
         {
             try
@@ -233,6 +260,7 @@ namespace SocialSiteRepositoryLayer.Services
                     FirstName = userData.FirstName,
                     LastName = userData.LastName,
                     Email = userData.Email,
+                    ProfilePath = userData.ProfilePath,
                     IsActive = userData.IsActive,
                     UserRole = userData.UserRole,
                     CreatedDate = userData.CreatedDate,

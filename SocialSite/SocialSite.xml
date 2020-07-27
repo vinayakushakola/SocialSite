@@ -80,6 +80,13 @@
             <param name="loginDetails">Login Data</param>
             <returns>If Data Found return Ok else </returns>
         </member>
+        <member name="M:SocialSite.Controllers.UserController.UploadProfileImage(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Upload Profile Picture
+            </summary>
+            <param name="formFile">Image Path</param>
+            <returns>If Image Uploaded</returns>
+        </member>
         <member name="M:SocialSite.Controllers.UserController.SendFriendRequest(System.Int32)">
             <summary>
             Send Friend Request 
@@ -128,6 +135,13 @@
             <param name="userDetails">User Details</param>
             <param name="tokenType">Token Type</param>
             <returns>It returns token</returns>
+        </member>
+        <member name="M:SocialSite.Controllers.UserController.UploadImageToCloudinary(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            It is used to Upload image into the Cloudinary
+            </summary>
+            <param name="formFile">Image Path</param>
+            <returns>If Image Uploaded Successfully return Image Link else Exception</returns>
         </member>
     </members>
 </doc>

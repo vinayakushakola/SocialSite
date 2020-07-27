@@ -18,6 +18,8 @@ namespace SocialSiteBusinessLayer.Interfaces
 
         UserResponse Login(LoginRequest loginDetails);
 
+        UserResponse UploadProfileImage(int userID, string profilePath);
+
         bool SendFriendRequest(int userID, int friendID);
 
         List<UserResponse> FriendRequests(int userID);

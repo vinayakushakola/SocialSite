@@ -18,6 +18,8 @@ namespace SocialSiteCommonLayer.ResponseModels
 
         public string Email { get; set; }
 
+        public string ProfilePath { get; set; }
+
         public bool IsActive { get; set; }
 
         public string UserRole { get; set; }

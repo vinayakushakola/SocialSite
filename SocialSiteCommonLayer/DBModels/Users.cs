@@ -33,6 +33,8 @@ namespace SocialSiteCommonLayer.DBModels
         [StringLength(20)]
         public string Password { get; set; }
 
+        public string ProfilePath { get; set; }
+
         [Required]
         [DefaultValue("false")]
         public bool IsActive { get; set; }
