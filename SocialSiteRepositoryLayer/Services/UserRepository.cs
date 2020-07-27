@@ -122,19 +122,23 @@ namespace SocialSiteRepositoryLayer.Services
                 var friendExists = CheckUserExists(friendID);
                 if(userExists && friendExists)
                 {
-                    var friendData = new Friends
+                    var alreadySentRequest = _appDB.Friends.Any(f => f.UserID == userID && f.FriendID == friendID && f.IsAccepted == false);
+                    if (!alreadySentRequest)
                     {
-                        UserID = userID,
-                        FriendID = friendID,
-                        IsAccepted = false,
-                        IsRejected = false,
-                        CreatedDate = DateTime.Now,
-                        ModifiedDate = DateTime.Now
-                    };
-                    _appDB.Friends.Add(friendData);
-                    count = _appDB.SaveChanges();
-                    if (count > 0)
-                        return true;
+                        var friendData = new Friends
+                        {
+                            UserID = userID,
+                            FriendID = friendID,
+                            IsAccepted = false,
+                            IsRejected = false,
+                            CreatedDate = DateTime.Now,
+                            ModifiedDate = DateTime.Now
+                        };
+                        _appDB.Friends.Add(friendData);
+                        count = _appDB.SaveChanges();
+                        if (count > 0)
+                            return true;
+                    }
                 }
                 return false;
             }
@@ -242,11 +246,11 @@ namespace SocialSiteRepositoryLayer.Services
             }
         }
 
-        private bool CheckUserExists(int userID)
+        public bool CheckUserExists(int userID)
         {
             try
             {
-                var userExists = _appDB.Users.Any(user => user.ID == userID);
+                var userExists = _appDB.Users.Any(user => user.ID == userID && user.IsActive == true);
                 if (userExists)
                     return true;
                 else

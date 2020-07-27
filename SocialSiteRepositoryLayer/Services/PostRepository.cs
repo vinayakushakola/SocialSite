@@ -55,7 +55,9 @@ namespace SocialSiteRepositoryLayer.Services
             try
             {
                 var userExists = CheckUserExists(userID);
-                if (userExists)
+                var postExists = CheckPostExists(postID);
+
+                if (userExists && postExists)
                 {
                     var postData = _appDB.Posts.
                         Where(post => post.PostID == postID && post.IsRemoved == false).
@@ -75,20 +77,24 @@ namespace SocialSiteRepositoryLayer.Services
         {
             try
             {
-                var postData = new Posts
+                var userExists = CheckUserExists(userID);
+                if (userExists)
                 {
-                    UserID = userID,
-                    PostPath = postPath,
-                    IsRemoved = false,
-                    CreatedDate = DateTime.Now,
-                    ModifiedDate = DateTime.Now
-                };
-                _appDB.Posts.Add(postData);
-                count = _appDB.SaveChanges();
-                if (count > 0)
-                {
-                    var responseData = PostResponseMethod(postData);
-                    return responseData;
+                    var postData = new Posts
+                    {
+                        UserID = userID,
+                        PostPath = postPath,
+                        IsRemoved = false,
+                        CreatedDate = DateTime.Now,
+                        ModifiedDate = DateTime.Now
+                    };
+                    _appDB.Posts.Add(postData);
+                    count = _appDB.SaveChanges();
+                    if (count > 0)
+                    {
+                        var responseData = PostResponseMethod(postData);
+                        return responseData;
+                    }
                 }
                 return null;
             }
@@ -103,7 +109,7 @@ namespace SocialSiteRepositoryLayer.Services
             try
             {
                 var userExists = CheckUserExists(userID);
-                var postExists = _appDB.Posts.Any(post => post.PostID == postID && post.IsRemoved == false);
+                var postExists = CheckPostExists(postID);
 
                 if (userExists && postExists)
                 {
@@ -116,12 +122,24 @@ namespace SocialSiteRepositoryLayer.Services
                         ModifiedDate = DateTime.Now
                     };
                     var postData = _appDB.Posts.Find(postID);
-                    postData.PostLikes += 1;
-                    _appDB.SaveChanges();
-                    _appDB.Likes.Add(likeData);
-                    count = _appDB.SaveChanges();
-                    if (count > 0)
-                        return true;
+                    var likedAlready = _appDB.Likes.
+                        Where(like => like.PostID == postID && like.LikeByUserID == userID).FirstOrDefault();
+                    if (likedAlready == null)
+                    {
+                        postData.PostLikes += 1;
+                        _appDB.SaveChanges();
+                        _appDB.Likes.Add(likeData);
+                        count = _appDB.SaveChanges();
+                        if (count > 0)
+                            return true;
+                    }
+                    else
+                    {
+                        postData.PostLikes -= 1;
+                        likedAlready.IsLiked = false;
+                        _appDB.SaveChanges();
+                    }
+                    
                 }
                 return false;
             }
@@ -136,7 +154,7 @@ namespace SocialSiteRepositoryLayer.Services
             try
             {
                 var userExists = CheckUserExists(userID);
-                var postExists = _appDB.Posts.Any(post => post.PostID == postID && post.IsRemoved == false);
+                var postExists = CheckPostExists(postID);
 
                 if (userExists && postExists)
                 {
@@ -167,7 +185,7 @@ namespace SocialSiteRepositoryLayer.Services
             try
             {
                 var userExists = CheckUserExists(userID);
-                var postExists = _appDB.Posts.Any(post => post.PostID == postID && post.IsRemoved == false);
+                var postExists = CheckPostExists(postID);
 
                 if (userExists && postExists)
                 {
@@ -197,7 +215,7 @@ namespace SocialSiteRepositoryLayer.Services
             try
             {
                 var userExists = CheckUserExists(userID);
-                var postExists = _appDB.Posts.Any(post => post.PostID == postID && post.IsRemoved == false);
+                var postExists = CheckPostExists(postID);
 
                 if (userExists && postExists)
                 {
@@ -245,11 +263,31 @@ namespace SocialSiteRepositoryLayer.Services
             }
         }
 
-        private bool CheckUserExists(int userID)
+        public bool CheckUserExists(int userID)
         {
             try
             {
-                return _appDB.Users.Any(user => user.ID == userID);
+                var userExists = _appDB.Users.Any(user => user.ID == userID && user.IsActive == true);
+                if (userExists)
+                    return true;
+                else
+                    return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public bool CheckPostExists(int postID)
+        {
+            try
+            {
+                var postExists = _appDB.Posts.Any(post => post.PostID == postID && post.IsRemoved == false);
+                if (postExists)
+                    return true;
+                else
+                    return false;
             }
             catch(Exception ex)
             {
